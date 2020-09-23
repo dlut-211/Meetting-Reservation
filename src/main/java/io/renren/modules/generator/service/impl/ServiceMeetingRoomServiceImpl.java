@@ -1,5 +1,6 @@
 package io.renren.modules.generator.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,9 +19,12 @@ public class ServiceMeetingRoomServiceImpl extends ServiceImpl<ServiceMeetingRoo
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String key = (String)params.get("key");
         IPage<ServiceMeetingRoomEntity> page = this.page(
                 new Query<ServiceMeetingRoomEntity>().getPage(params),
                 new QueryWrapper<ServiceMeetingRoomEntity>()
+                        .like(StringUtils.isNotBlank(key),"location", key)
+                        .isNotNull("room_name")
         );
 
         return new PageUtils(page);
