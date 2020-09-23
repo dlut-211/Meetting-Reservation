@@ -1,8 +1,13 @@
 package io.renren.modules.generator.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import io.renren.modules.generator.entity.ServiceMeetingRoomEntity;
+import io.renren.modules.generator.service.ServiceMeetingRoomService;
+import io.renren.modules.sys.entity.SysUserEntity;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +35,8 @@ import io.renren.common.utils.R;
 public class ServiceMeetingController {
     @Autowired
     private ServiceMeetingService serviceMeetingService;
-
+    @Autowired
+    private ServiceMeetingRoomService serviceMeetingRoomService;
     /**
      * 列表
      */
@@ -42,6 +48,17 @@ public class ServiceMeetingController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 表单填充
+     */
+    @RequestMapping("/formuser")
+    @RequiresPermissions("generator:servicemeeting:list")
+    public R formuser(){
+        SysUserEntity user_now=(SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        List<ServiceMeetingRoomEntity> room= serviceMeetingRoomService.list();
+//        SysUserEntity user=sysUserService.
+        return R.ok().put("now_user", user_now).put("room",room);
+    }
 
     /**
      * 信息
