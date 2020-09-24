@@ -1,6 +1,8 @@
 package io.renren.modules.generator.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -25,5 +27,16 @@ public class ServiceMeetingServiceImpl extends ServiceImpl<ServiceMeetingDao, Se
 
         return new PageUtils(page);
     }
+
+    @Override
+    public List<ServiceMeetingEntity> chooselist(String params) {
+        QueryWrapper<ServiceMeetingEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("start_time",params);
+        List<ServiceMeetingEntity>  page =baseMapper.selectList(queryWrapper);
+
+        return page;
+    }
+
+
 
 }
