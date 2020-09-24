@@ -1,8 +1,6 @@
 package io.renren.modules.generator.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import io.renren.modules.generator.entity.ServiceMeetingRoomEntity;
 import io.renren.modules.generator.service.ServiceMeetingRoomService;
@@ -56,8 +54,24 @@ public class ServiceMeetingController {
     public R formuser(){
         SysUserEntity user_now=(SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         List<ServiceMeetingRoomEntity> room= serviceMeetingRoomService.list();
-//        SysUserEntity user=sysUserService.
-        return R.ok().put("now_user", user_now).put("room",room);
+        List<Map<String, String>> list = new ArrayList<>();
+
+        for (int i=7;i<21;i++)
+        {
+            Map map = new HashMap();
+            for(int j=0;j<room.size();j++)
+            {
+                if (j != 0) {
+                    map.put("column" + j, "column" + j);
+                } else {
+                    map.put("date", i + ":00-" + (i + 1) + ":00");
+                }
+            }
+            list.add(map);
+        }
+
+        System.out.println(user_now);
+        return R.ok().put("now_user", user_now).put("room",room).put("list",list);
     }
 
     /**

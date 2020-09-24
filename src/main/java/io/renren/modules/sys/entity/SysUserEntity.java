@@ -87,4 +87,9 @@ public class SysUserEntity implements Serializable {
 	 */
 	private Date createTime;
 
+	/**
+	 * 手机号
+	 */
+	private String department;
+
 }
