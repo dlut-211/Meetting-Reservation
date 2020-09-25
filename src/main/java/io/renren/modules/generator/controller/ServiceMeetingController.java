@@ -83,8 +83,9 @@ public class ServiceMeetingController {
 //            System.out.println(Integer.parseInt( table.get(i).getStartTime().toString().split(" ")[3].substring(0,2)));
             Map map = new HashMap();
             int a=Integer.parseInt( table.get(i).getStartTime().toString().split(" ")[3].substring(0,2));
+            int b=Integer.parseInt( table.get(i).getEndTime().toString().split(" ")[3].substring(0,2));
            // map.put(table.get(i).getRoomName(),a );
-            map.put("chose",table.get(i).getRoomName()+"_"+a );
+            map.put("chose",table.get(i).getRoomName()+"_"+a+"_"+b );
             choosetable.add(map);
             System.out.println(map);
         }
