@@ -1,5 +1,6 @@
 package io.renren.modules.generator.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +21,12 @@ public class ServiceMeetingServiceImpl extends ServiceImpl<ServiceMeetingDao, Se
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String key = (String)params.get("key");
         IPage<ServiceMeetingEntity> page = this.page(
                 new Query<ServiceMeetingEntity>().getPage(params),
                 new QueryWrapper<ServiceMeetingEntity>()
+                        .like(StringUtils.isNotBlank(key),"room_user", key)
+                        .isNotNull("room_name")
         );
 
         return new PageUtils(page);

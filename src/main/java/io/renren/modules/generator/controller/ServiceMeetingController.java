@@ -77,7 +77,7 @@ public class ServiceMeetingController {
         meetRequest.setHeadCount(Integer.parseInt(params.get("sum").toString() ));
         meetRequest.setLeader( params.get("leader").toString());
         meetRequest.setMeetingTheme( params.get("theme").toString());
-        if(params.get("note").toString()!=null)
+        if(params.get("note")!=null)
         meetRequest.setRemark( params.get("note").toString());
 
         serviceMeetingService.save(meetRequest);
