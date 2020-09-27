@@ -29,5 +29,4 @@ public class ServiceMeetingRoomServiceImpl extends ServiceImpl<ServiceMeetingRoo
 
         return new PageUtils(page);
     }
-
 }

@@ -35,6 +35,7 @@ public class ServiceMeetingController {
     private ServiceMeetingService serviceMeetingService;
     @Autowired
     private ServiceMeetingRoomService serviceMeetingRoomService;
+
     /**
      * 列表
      */
@@ -51,16 +52,19 @@ public class ServiceMeetingController {
      */
     @RequestMapping("/formuser")
     @RequiresPermissions("generator:servicemeeting:list")
-    public R formuser(){
+    public R formuser(@RequestBody HashMap<String, String> params){
+        String date =params.get("value");
         SysUserEntity user_now=(SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         List<ServiceMeetingRoomEntity> room= serviceMeetingRoomService.list();
         List<Map<String, String>> list = new ArrayList<>();
-
+        List<Map<String, Integer>> choosetable = new ArrayList<>();
+//        int [][] choosetable=new int[14][room.size()];
         for (int i=7;i<21;i++)
         {
             Map map = new HashMap();
             for(int j=0;j<room.size();j++)
             {
+//                choosetable[i][j]=0;
                 if (j != 0) {
                     map.put("column" + j, "column" + j);
                 } else {
@@ -70,8 +74,24 @@ public class ServiceMeetingController {
             list.add(map);
         }
 
+
+//        List<ServiceMeetingEntity> tablelist= serviceMeetingService.chooselist("2020-09-24");
+        List<ServiceMeetingEntity> table= serviceMeetingService.chooselist(date);
+
+        for (int i=0;i<table.size();i++)
+        {
+            Map map = new HashMap();
+            int a=Integer.parseInt( table.get(i).getStartTime().toString().split(" ")[3].substring(0,2));
+            int b=Integer.parseInt( table.get(i).getEndTime().toString().split(" ")[3].substring(0,2));
+           // map.put(table.get(i).getRoomName(),a );
+            map.put("chose",table.get(i).getRoomName()+"_"+a+"_"+b );
+            choosetable.add(map);
+           System.out.println(map);
+        }
+
+        System.out.println(date);
         System.out.println(user_now);
-        return R.ok().put("now_user", user_now).put("room",room).put("list",list);
+        return R.ok().put("now_user", user_now).put("room",room).put("list",list).put("choosetable",choosetable);
     }
 
     /**
