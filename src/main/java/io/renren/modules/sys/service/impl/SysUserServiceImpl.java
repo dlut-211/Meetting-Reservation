@@ -22,15 +22,20 @@ import io.renren.modules.sys.service.SysUserRoleService;
 import io.renren.modules.sys.service.SysUserService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.*;
 
 
 /**
@@ -121,7 +126,86 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 		return this.update(userEntity,
 				new QueryWrapper<SysUserEntity>().eq("user_id", userId).eq("password", password));
 	}
-	
+
+	@Override
+	public boolean batchImport(String fileName, MultipartFile file) throws Exception {
+		System.out.println("1111111");
+		boolean notNull = false;
+		List<SysUserEntity> userList = new ArrayList<SysUserEntity>();
+		if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+			throw new Exception("上传文件格式不正确");
+		}
+		boolean isExcel2003 = true;
+		if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+			isExcel2003 = false;
+		}
+		InputStream is = file.getInputStream();
+		Workbook wb = null;
+		if (isExcel2003) {
+			wb = new HSSFWorkbook(is);
+		} else {
+			wb = new XSSFWorkbook(is);
+		}
+		Sheet sheet = wb.getSheetAt(0);
+		if(sheet!=null){
+			notNull = true;
+		}
+		SysUserEntity user;
+		System.out.println("sheet"+sheet.getLastRowNum());
+
+
+		for (int r = 1; r <= sheet.getLastRowNum(); r++) {
+			Row row = sheet.getRow(r);
+			if (row == null){
+				continue;
+			}
+
+			user = new SysUserEntity();
+
+			if( row.getCell(0).getCellType() !=1){
+
+				throw new Exception("导入失败(第"+(r+1)+"行,姓名请设为文本格式)");
+			}
+			String name = row.getCell(0).getStringCellValue();
+			if(name == null || name.isEmpty()){
+				throw new Exception("导入失败(第"+(r+1)+"行,姓名未填写)");
+			}
+
+
+			String dep;
+			row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+			String phone = row.getCell(1).getStringCellValue();
+
+			if(phone==null || phone.isEmpty()){
+				throw new Exception("导入失败(第"+(r+1)+"行,电话未填写)");
+			}
+
+			if (row.getCell(2).getCellType() != 1) {
+				throw new Exception("导入失败(第" + (r + 1) + "行,部门请设为文本格式)");
+			} else {
+				 dep = row.getCell(2).getStringCellValue();
+			}
+//用户名
+			String username = row.getCell(3).getStringCellValue();
+			if(username==null || username.isEmpty()){
+				throw new Exception("导入失败(第"+(r+3)+"行,用户名未填写)");
+			}
+
+			user.setEmail(name); // 姓名
+			user.setMobile(phone); //电话
+			user.setDepartment(dep);//部门
+			user.setStatus(1);//状态
+//			UUID uuid = UUID.randomUUID();
+			user.setUsername(username); // 用户名
+			user.setPassword("123456");//密码
+			user.setCreateTime(new Date()); //创建时间
+
+			userList.add(user);
+		}
+		 notNull = this.saveBatch(userList);
+		return notNull;
+	}
+
 	/**
 	 * 检查角色是否越权
 	 */

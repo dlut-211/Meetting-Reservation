@@ -8,6 +8,7 @@
 
 package io.renren;
 
+import io.renren.modules.sys.service.SysUserService;
 import io.renren.service.DynamicDataSourceTestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +26,18 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class DynamicDataSourceTest {
     @Autowired
     private DynamicDataSourceTestService dynamicDataSourceTestService;
-
+    @Autowired
+    private SysUserService sysUserService;
     @Test
     public void test(){
-        Long id = 1L;
+        /*Long id = 1L;
 
         dynamicDataSourceTestService.updateUser(id);
         dynamicDataSourceTestService.updateUserBySlave1(id);
-        dynamicDataSourceTestService.updateUserBySlave2(id);
+        dynamicDataSourceTestService.updateUserBySlave2(id);*/
+
     }
+
+
 
 }
