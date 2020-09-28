@@ -23,7 +23,7 @@ public class ServiceMeetingRoomServiceImpl extends ServiceImpl<ServiceMeetingRoo
         IPage<ServiceMeetingRoomEntity> page = this.page(
                 new Query<ServiceMeetingRoomEntity>().getPage(params),
                 new QueryWrapper<ServiceMeetingRoomEntity>()
-                        .like(StringUtils.isNotBlank(key),"location", key)
+                        .like(StringUtils.isNotBlank(key),"room_name", key)
                         .isNotNull("room_name")
         );
 

@@ -1,5 +1,6 @@
 package io.renren.modules.generator.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import io.renren.modules.generator.entity.ServiceMeetingRoomEntity;
@@ -48,7 +49,45 @@ public class ServiceMeetingController {
     }
 
     /**
-     * 表单填充
+     * 表单提交
+     */
+    @RequestMapping("/formsubmit")
+    @RequiresPermissions("generator:servicemeeting:list")
+    public R formsubmit(@RequestBody HashMap<String, Object> params)throws Exception{
+
+
+        ServiceMeetingEntity meetRequest=new ServiceMeetingEntity();
+        meetRequest.setDepartment( params.get("department").toString());
+        meetRequest.setRoomUser( params.get("name").toString());
+        meetRequest.setRoomName( params.get("room").toString());
+        String datenow= params.get("datechoose").toString();
+        String date1=datenow+" "+ params.get("date1").toString()+":00";
+        String date2=datenow+" "+ params.get("date2").toString()+":00";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date datestart = null;
+        Date dateend = null;
+        try {
+            datestart= sdf.parse(date1);
+            dateend= sdf.parse(date2);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        meetRequest.setStartTime(datestart);
+        meetRequest.setEndTime(dateend);
+        meetRequest.setHeadCount(Integer.parseInt(params.get("sum").toString() ));
+        meetRequest.setLeader( params.get("leader").toString());
+        meetRequest.setMeetingTheme( params.get("theme").toString());
+        if(params.get("note")!=null)
+        meetRequest.setRemark( params.get("note").toString());
+
+        serviceMeetingService.save(meetRequest);
+
+        return R.ok();
+//        return R.ok().put("get",meetRequest);
+    }
+
+    /**
+     * 表格填充
      */
     @RequestMapping("/formuser")
     @RequiresPermissions("generator:servicemeeting:list")
