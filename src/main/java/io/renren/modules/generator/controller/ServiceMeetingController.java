@@ -43,6 +43,7 @@ public class ServiceMeetingController {
     @RequestMapping("/list")
     @RequiresPermissions("generator:servicemeeting:list")
     public R list(@RequestParam Map<String, Object> params){
+
         PageUtils page = serviceMeetingService.queryPage(params);
 
         return R.ok().put("page", page);

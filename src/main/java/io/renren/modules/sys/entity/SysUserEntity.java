@@ -15,7 +15,7 @@ import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.UpdateGroup;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
+//import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
@@ -58,7 +58,7 @@ public class SysUserEntity implements Serializable {
 	 * 邮箱
 	 */
 	@NotBlank(message="邮箱不能为空", groups = {AddGroup.class, UpdateGroup.class})
-	@Email(message="邮箱格式不正确", groups = {AddGroup.class, UpdateGroup.class})
+//	@Email(message="邮箱格式不正确", groups = {AddGroup.class, UpdateGroup.class})
 	private String email;
 
 	/**
