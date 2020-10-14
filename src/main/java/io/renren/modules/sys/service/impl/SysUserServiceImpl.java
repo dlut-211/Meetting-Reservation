@@ -49,6 +49,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	private SysUserRoleService sysUserRoleService;
 	@Autowired
 	private SysRoleService sysRoleService;
+	@Autowired
+	private SysUserService sysUserService;
+
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -202,8 +205,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 
 			userList.add(user);
 		}
-		 notNull = this.saveBatch(userList);
+
+		List<Long> sign=new ArrayList<>();
+		sign.add(2l);
+
+		for(int i=0;i<userList.size();i++)
+		{
+			System.out.println(userList.get(i).getUsername());
+			System.out.println(sysUserService.queryByUserName(userList.get(i).getUsername()).getUserId());
+			sysUserRoleService.saveOrUpdate(sysUserService.queryByUserName(userList.get(i).getUsername()).getUserId(), sign);
+		}
+
 		return notNull;
+
 	}
 
 	/**
