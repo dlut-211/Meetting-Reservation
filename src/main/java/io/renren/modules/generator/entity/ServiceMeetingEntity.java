@@ -64,5 +64,9 @@ public class ServiceMeetingEntity implements Serializable {
 	 * 预约状态（0:审核中 1，通过，2：未通过，3:已取消）
 	 */
 	private Integer status;
+	/**
+	 * 电话
+	 */
+//	private String number;
 
 }

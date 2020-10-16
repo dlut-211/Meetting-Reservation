@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import io.renren.modules.generator.entity.ServiceMeetingRoomEntity;
+import io.renren.modules.generator.entity.ServiceMeetingWithPhone;
 import io.renren.modules.generator.service.ServiceMeetingRoomService;
 import io.renren.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
@@ -46,7 +47,10 @@ public class ServiceMeetingController {
 
         PageUtils page = serviceMeetingService.queryPage(params);
 
-        return R.ok().put("page", page);
+        SysUserEntity user_now=(SysUserEntity) SecurityUtils.getSubject().getPrincipal();
+        List<ServiceMeetingWithPhone> aaa=serviceMeetingService.listwithphone(user_now.getEmail(),user_now.getMobile());
+
+        return R.ok().put("page", page).put("listwithphone", aaa);
     }
 
     /**
