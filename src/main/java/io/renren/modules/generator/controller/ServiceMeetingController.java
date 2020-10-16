@@ -7,6 +7,7 @@ import io.renren.modules.generator.entity.ServiceMeetingRoomEntity;
 import io.renren.modules.generator.entity.ServiceMeetingWithPhone;
 import io.renren.modules.generator.service.ServiceMeetingRoomService;
 import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class ServiceMeetingController {
     @Autowired
     private ServiceMeetingRoomService serviceMeetingRoomService;
 
+    @Autowired
+    private SysUserService sysUserService;
     /**
      * 列表
      */
@@ -48,7 +51,14 @@ public class ServiceMeetingController {
         PageUtils page = serviceMeetingService.queryPage(params);
 
         SysUserEntity user_now=(SysUserEntity) SecurityUtils.getSubject().getPrincipal();
-        List<ServiceMeetingWithPhone> aaa=serviceMeetingService.listwithphone(user_now.getEmail(),user_now.getMobile());
+        List<ServiceMeetingWithPhone> aaa;
+        if(user_now.getUserId()!=1l)
+            aaa =serviceMeetingService.listwithphone(user_now.getEmail(),user_now.getMobile());
+        else
+        {
+            aaa=serviceMeetingService.listwithphone("all","all");
+        }
+
 
         return R.ok().put("page", page).put("listwithphone", aaa);
     }

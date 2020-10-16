@@ -1,5 +1,6 @@
 package io.renren.modules.generator.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import io.renren.modules.generator.entity.ServiceMeetingWithPhone;
 import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.service.SysUserService;
@@ -64,15 +65,17 @@ public class ServiceMeetingServiceImpl extends ServiceImpl<ServiceMeetingDao, Se
 
     @Override
     public List<ServiceMeetingWithPhone> listwithphone(String params,String phone){
-        System.out.println("==========="+params);
+
+        if(params.equals("all"))
+            params="";
         QueryWrapper<ServiceMeetingEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("room_user",params);
 
         List<ServiceMeetingEntity>  alist =baseMapper.selectList(queryWrapper);
 
         for(int i=0;i<alist.size();i++)
-        System.out.println(alist.get(i));
-            System.out.println("===========");
+             System.out.println(alist.get(i));
+
 
         List<ServiceMeetingWithPhone> phoneList=new ArrayList<>();
 
@@ -80,7 +83,17 @@ public class ServiceMeetingServiceImpl extends ServiceImpl<ServiceMeetingDao, Se
 
             ServiceMeetingWithPhone phoneitem=new ServiceMeetingWithPhone();
             phoneitem.setItem(alist.get(i));
-            phoneitem.setMobile(phone);
+            if(phone.equals("all"))
+            {
+                QueryWrapper<SysUserEntity> qw=new QueryWrapper<>();
+                qw.like("email",alist.get(i).getRoomUser());
+                String number = sysUserService.getBaseMapper().selectList(qw).get(0).getMobile();
+                phoneitem.setMobile(number);
+            }
+            else {
+                phoneitem.setMobile(phone);
+            }
+
             phoneList.add(phoneitem);
         }
         return phoneList;
