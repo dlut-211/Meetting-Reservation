@@ -202,7 +202,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 			user.setUsername(username); // 用户名
 			user.setPassword("123456");//密码
 			user.setCreateTime(new Date()); //创建时间
-
+			user.setCreateUserId(1l);
 			userList.add(user);
 		}
 
@@ -211,6 +211,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 
 		for(int i=0;i<userList.size();i++)
 		{
+			sysUserService.saveUser(userList.get(i));
 			System.out.println(userList.get(i).getUsername());
 			System.out.println(sysUserService.queryByUserName(userList.get(i).getUsername()).getUserId());
 			sysUserRoleService.saveOrUpdate(sysUserService.queryByUserName(userList.get(i).getUsername()).getUserId(), sign);
