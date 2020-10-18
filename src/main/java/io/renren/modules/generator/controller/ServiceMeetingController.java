@@ -3,6 +3,7 @@ package io.renren.modules.generator.controller;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.modules.generator.entity.ServiceMeetingRoomEntity;
 import io.renren.modules.generator.entity.ServiceMeetingWithPhone;
 import io.renren.modules.generator.service.ServiceMeetingRoomService;
@@ -86,7 +87,13 @@ public class ServiceMeetingController {
             e.printStackTrace();
         }
 
-        return R.ok().put("date",serviceMeetingService.findmeeting(datestart,dateend,room));
+        meetingGet= serviceMeetingService.findmeeting(datestart,dateend,room);
+
+        QueryWrapper<SysUserEntity> qw=new QueryWrapper<>();
+        qw.like("email",meetingGet.getRoomUser());
+        String number = sysUserService.getBaseMapper().selectList(qw).get(0).getMobile();
+
+        return R.ok().put("date",meetingGet).put("mobile",number);
     }
 
     /**
