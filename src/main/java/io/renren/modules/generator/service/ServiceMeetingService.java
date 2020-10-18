@@ -6,6 +6,7 @@ import io.renren.modules.generator.entity.ServiceMeetingEntity;
 import io.renren.modules.generator.entity.ServiceMeetingWithPhone;
 import io.renren.modules.sys.service.SysUserService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +24,7 @@ public interface ServiceMeetingService extends IService<ServiceMeetingEntity> {
     List<ServiceMeetingEntity> chooselist(String params);
 
     List<ServiceMeetingWithPhone> listwithphone(String params,String phone);
+
+    ServiceMeetingEntity findmeeting(Date start,Date end,String room);
 }
 

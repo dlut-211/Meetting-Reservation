@@ -64,13 +64,37 @@ public class ServiceMeetingController {
     }
 
     /**
+     * 管理员查看表格信息信息
+     */
+    @RequestMapping("/atableget")
+    @RequiresPermissions("generator:servicemeeting:list")
+    public R atableget(@RequestBody HashMap<String, Object> params)throws Exception{
+        ServiceMeetingEntity meetingGet=new ServiceMeetingEntity();
+
+        String date1= params.get("date").toString()+" "+ params.get("starttime").toString()+":00";
+        String date2= params.get("date").toString()+" "+ params.get("endtime").toString()+":00";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date datestart = null;
+        Date dateend = null;
+
+        String room=params.get("room").toString();
+        try {
+            datestart= sdf.parse(date1);
+            dateend= sdf.parse(date2);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        return R.ok().put("date",serviceMeetingService.findmeeting(datestart,dateend,room));
+    }
+
+    /**
      * 表单提交
      */
     @RequestMapping("/formsubmit")
     @RequiresPermissions("generator:servicemeeting:list")
     public R formsubmit(@RequestBody HashMap<String, Object> params)throws Exception{
-
-
         ServiceMeetingEntity meetRequest=new ServiceMeetingEntity();
         meetRequest.setDepartment( params.get("department").toString());
         meetRequest.setRoomUser( params.get("name").toString());

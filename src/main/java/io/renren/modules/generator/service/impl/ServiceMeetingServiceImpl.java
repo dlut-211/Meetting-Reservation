@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -51,6 +52,18 @@ public class ServiceMeetingServiceImpl extends ServiceImpl<ServiceMeetingDao, Se
 ////        }
 
         return new PageUtils(page);
+    }
+
+
+    @Override
+    public  ServiceMeetingEntity findmeeting(Date start, Date end, String room){
+        ServiceMeetingEntity target=new ServiceMeetingEntity();
+        QueryWrapper<ServiceMeetingEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("room_name",room)
+        .le("start_time",start)
+        .ge("end_time",end);
+        target=baseMapper.selectOne(queryWrapper);
+        return target;
     }
 
     @Override
