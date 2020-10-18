@@ -52,7 +52,7 @@ public class ServiceMeetingController {
 
         SysUserEntity user_now=(SysUserEntity) SecurityUtils.getSubject().getPrincipal();
         List<ServiceMeetingWithPhone> aaa;
-        if(user_now.getUserId()!=1l)
+        if(user_now.getUserId()!=1l&&user_now.getUserId()!=2l)
             aaa =serviceMeetingService.listwithphone(user_now.getEmail(),user_now.getMobile());
         else
         {
